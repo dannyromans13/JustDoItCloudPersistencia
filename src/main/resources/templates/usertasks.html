@@ -4,39 +4,28 @@
     <meta charset="UTF-8">
     <title>JustDoIt! - Tareas de Usuario</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body>
 <div class="container">
 
-    <!-- Left column -->
     <aside class="sidebar">
         <div class="logo">
             <a th:href="@{/}"><img th:src="@{/images/JustDoIt.png}" alt="JustDoIt Logo" width="200" height="200"></a>
         </div>
-
         <nav class="navigation">
             <h3>Opciones</h3>
             <ul>
-                <li>
-                    <a th:href="@{/user/home}">Inicio</a>
-                </li>
-                <li>
-                    <strong>Tareas de usuario actual</strong>
-                </li>
-                <li>
-                    <a th:href="@{/logout}">Cerrar sesión</a>
-                </li>
+                <li><a th:href="@{/user/home}">Inicio</a></li>
+                <li><strong>Tareas de usuario actual</strong></li>
+                <li><a th:href="@{/logout}">Cerrar sesión</a></li>
             </ul>
         </nav>
     </aside>
 
-    <!-- Right column -->
     <main class="content">
         <h1>Tareas de usuario</h1>
 
-        <!-- User info -->
         <div class="user-card">
             <div class="user-avatar" th:text="${user.name != null} ? ${user.name.substring(0,1)} : 'U'">U</div>
             <div class="user-info">
@@ -46,7 +35,6 @@
             </div>
         </div>
 
-        <!-- Tasks grouped by status -->
         <div class="tasks-grid">
 
             <!-- PENDING -->
@@ -55,27 +43,21 @@
                 <div th:if="${#lists.isEmpty(user.tasks.?[status.name() == 'PENDING'])}">
                     No hay tareas pendientes.
                 </div>
-                <form  method="POST" class="new-task-form" th:object="${newTask}">
-                    <!-- Solo capturamos la descripción -->
+                <form method="POST" class="new-task-form" th:object="${newTask}">
                     <label for="description">Nueva tarea:</label>
-                    <input th:field="*{description}" type="text" placeholder="Describe la tarea..."
-                    />
+                    <input th:field="*{description}" type="text" placeholder="Describe la tarea..." />
                     <span class="validationError"
                           th:if="${#fields.hasErrors('description')}"
                           th:errors="*{description}">Desc error</span>
-
                     <select th:field="*{deadline}">
                         <option value="">Fecha límite:</option>
                         <option value="1WEEK">1 semana</option>
                         <option value="1MONTH">1 mes</option>
                     </select>
-
-
-                    <!-- Estado fijo a PENDING -->
                     <input type="hidden" name="status" value="PENDING" />
-
                     <button type="submit">Crear tarea</button>
                 </form>
+
                 <div th:each="task : ${user.tasks.?[status.name() == 'PENDING']}">
                     <div class="task-item pending">
                         <div class="task-desc" th:text="${task.description}">Descripción de la tarea...</div>
@@ -85,6 +67,11 @@
                                 No especificada
                             </span>
                         </div>
+                        <!-- ✅ Avanzar button for PENDING tasks -->
+                        <form action="/user/tasks/advance" method="post">
+                            <input type="hidden" name="taskId" th:value="${task.id}" />
+                            <button type="submit">Avanzar</button>
+                        </form>
                     </div>
                 </div>
             </section>
@@ -98,6 +85,11 @@
                 <div th:each="task : ${user.tasks.?[status.name() == 'INPROGRESS']}">
                     <div class="task-item inprogress">
                         <div class="task-desc" th:text="${task.description}">Descripción de la tarea...</div>
+                        <!-- ✅ Avanzar button for INPROGRESS tasks -->
+                        <form action="/user/tasks/advance" method="post">
+                            <input type="hidden" name="taskId" th:value="${task.id}" />
+                            <button type="submit">Avanzar</button>
+                        </form>
                     </div>
                 </div>
             </section>
@@ -111,12 +103,12 @@
                 <div th:each="task : ${user.tasks.?[status.name() == 'DONE']}">
                     <div class="task-item done">
                         <div class="task-desc" th:text="${task.description}">Descripción de la tarea...</div>
+                        <!-- No Avanzar button for DONE tasks -->
                     </div>
                 </div>
             </section>
 
         </div>
-
     </main>
 </div>
 </body>
