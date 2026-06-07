@@ -40,7 +40,7 @@
             <!-- PENDING -->
             <section class="tasks-group">
                 <h3>Pendientes</h3>
-                <div th:if="${#lists.isEmpty(user.tasks.?[status.name() == 'PENDING'])}">
+                <div th:if="${#lists.isEmpty(user.tasks.?[status == T(teccr.justdoitcloud.data.Task.Status).PENDING])}">
                     No hay tareas pendientes.
                 </div>
                 <form method="POST" class="new-task-form" th:object="${newTask}">
@@ -58,7 +58,7 @@
                     <button type="submit">Crear tarea</button>
                 </form>
 
-                <div th:each="task : ${user.tasks.?[status.name() == 'PENDING']}">
+                <div th:each="task : ${user.tasks.?[status == T(teccr.justdoitcloud.data.Task.Status).PENDING]}">
                     <div class="task-item pending">
                         <div class="task-desc" th:text="${task.description}">Descripción de la tarea...</div>
                         <div>
@@ -67,7 +67,6 @@
                                 No especificada
                             </span>
                         </div>
-                        <!-- ✅ Avanzar button for PENDING tasks -->
                         <form action="/user/tasks/advance" method="post">
                             <input type="hidden" name="taskId" th:value="${task.id}" />
                             <button type="submit">Avanzar</button>
@@ -79,13 +78,12 @@
             <!-- INPROGRESS -->
             <section class="tasks-group">
                 <h3>En progreso</h3>
-                <div th:if="${#lists.isEmpty(user.tasks.?[status.name() == 'INPROGRESS'])}">
+                <div th:if="${#lists.isEmpty(user.tasks.?[status == T(teccr.justdoitcloud.data.Task.Status).INPROGRESS])}">
                     No hay tareas en progreso.
                 </div>
-                <div th:each="task : ${user.tasks.?[status.name() == 'INPROGRESS']}">
+                <div th:each="task : ${user.tasks.?[status == T(teccr.justdoitcloud.data.Task.Status).INPROGRESS]}">
                     <div class="task-item inprogress">
                         <div class="task-desc" th:text="${task.description}">Descripción de la tarea...</div>
-                        <!-- ✅ Avanzar button for INPROGRESS tasks -->
                         <form action="/user/tasks/advance" method="post">
                             <input type="hidden" name="taskId" th:value="${task.id}" />
                             <button type="submit">Avanzar</button>
@@ -97,13 +95,12 @@
             <!-- DONE -->
             <section class="tasks-group">
                 <h3>Completadas</h3>
-                <div th:if="${#lists.isEmpty(user.tasks.?[status.name() == 'DONE'])}">
+                <div th:if="${#lists.isEmpty(user.tasks.?[status == T(teccr.justdoitcloud.data.Task.Status).DONE])}">
                     No hay tareas completadas.
                 </div>
-                <div th:each="task : ${user.tasks.?[status.name() == 'DONE']}">
+                <div th:each="task : ${user.tasks.?[status == T(teccr.justdoitcloud.data.Task.Status).DONE]}">
                     <div class="task-item done">
                         <div class="task-desc" th:text="${task.description}">Descripción de la tarea...</div>
-                        <!-- No Avanzar button for DONE tasks -->
                     </div>
                 </div>
             </section>
